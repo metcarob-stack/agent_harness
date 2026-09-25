@@ -1,18 +1,30 @@
 #!/bin/sh
-# qvault - wrapper for Vault CLI that loads token from $VAULT_TOKEN_FILE
 
-# if [ -z "${VAULT_TOKEN_FILE}" ]; then
-#   echo "Error: VAULT_TOKEN_FILE is not set." >&2
-#   exit 1
-# fi
-#
-# if [ ! -f "${VAULT_TOKEN_FILE}" ]; then
-#   echo "Error: VAULT_TOKEN_FILE points to a missing file: ${VAULT_TOKEN_FILE}" >&2
-#   exit 1
-# fi
-#
-# export VAULT_TOKEN="$(cat "${VAULT_TOKEN_FILE}")"
+if [ -z "${AGENTNAME:-}" ]; then
+    echo "Error: AGENTNAME is not set." >&2
+    exit 1
+fi
 
-# This container uses docker secrets to get vault tokens
+ROLE_ID_FILE="/run/secrets/a_${AGENTNAME}_agent_role_id"
+SECRET_ID_FILE="/run/secrets/a_${AGENTNAME}_agent_secret_id"
+
+if [ ! -f "$ROLE_ID_FILE" ]; then
+    echo "Error: role ID secret is missing: $ROLE_ID_FILE" >&2
+    exit 1
+fi
+
+if [ ! -f "$SECRET_ID_FILE" ]; then
+    echo "Error: secret ID secret is missing: $SECRET_ID_FILE" >&2
+    exit 1
+fi
+
+ROLE_ID="$(cat "$ROLE_ID_FILE")"
+SECRET_ID="$(cat "$SECRET_ID_FILE")"
+
+export VAULT_TOKEN="$(
+    vault write -field=token auth/approle/login \
+        role_id="$ROLE_ID" \
+        secret_id="$SECRET_ID"
+)"
 
 exec vault "$@"
