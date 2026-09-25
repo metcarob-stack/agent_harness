@@ -1,0 +1,82 @@
+#!/bin/sh
+
+LOGLOC=/rjmlogs/qvaultfromopenclaw
+
+ENABLE_LOG=none
+#ENABLE_LOG=full
+
+export HOME=/home/node
+
+#Command to test (run in the openclaw container)
+#echo '{"ids":["homenet/agents/openclaw/accessedbyopenclaw/gateway_token"]}' | /home/node/bin/qvaultfromopenclaw
+
+JSON_INPUT=$(cat)
+
+if [ "$ENABLE_LOG" = "full" ]; then
+  echo "qvaultfromopenclaw start JSON_INPUT ${JSON_INPUT}" >> ${LOGLOC}
+fi
+if [ "$ENABLE_LOG" = "none" ]; then
+  LOGLOC=null
+fi
+
+
+# Initialize an empty JSON object for values
+VALUES="{}"
+
+# Loop over each secret ID in the JSON
+for SECRET_REF in $(echo "$JSON_INPUT" | jq -r '.ids[]'); do
+  # Parse the secret path and the field
+  # can use either : or / to seperate the path from the ref
+  if [ "$SECRET_REF" = "vault/aliasgateway" ]; then
+    SECRET_PATH="homenet/agents/openclaw/accessedbyopenclaw"
+    SECRET_FIELD="gatewaytoken"
+  else
+    if echo "$SECRET_REF" | grep -q ':'; then
+      SECRET_PATH="${SECRET_REF%%:*}"
+      SECRET_FIELD="${SECRET_REF##*:}"
+    else
+      SECRET_PATH="${SECRET_REF%/*}"
+      SECRET_FIELD="${SECRET_REF##*/}"
+    fi
+  fi
+  #SECRET_PATH="${SECRET_REF%%:*}"
+  #SECRET_FIELD="${SECRET_REF##*:}"
+
+  #echo "Retrieving secret ${SECRET_REF} (path=${SECRET_PATH}, field=${SECRET_FIELD})" >> ${LOGLOC}
+
+  # Call your Vault helper
+  #SECRET_VALUE=$(/usr/local/bin/qvault kv get -mount=kv -field="${SECRET_FIELD}" "${SECRET_PATH}" 2>>${LOGLOC})
+  SECRET_VALUE=$(/usr/local/bin/qvault kv get -mount=kv -field="${SECRET_FIELD}" "${SECRET_PATH}"  2>&1)
+  RES=$?
+
+  if [ ${RES} -ne 0 ] || [ -z "${SECRET_VALUE}" ]; then
+    echo "qvaultfromopenclaw failed for secret with RES= ${RES}" >> ${LOGLOC}
+    echo "   SECRET_FIELD= ${SECRET_FIELD}" >> ${LOGLOC}
+    echo "   SECRET_PATH= ${SECRET_PATH}" >> ${LOGLOC}
+    # Log any error output from qvault
+    if [ -n "${SECRET_VALUE}" ]; then
+        echo "   qvault error output: ${SECRET_VALUE}" >> ${LOGLOC}
+    fi
+    echo "Error: failed to retrieve secret for ${SECRET_REF}" >&2
+    exit 1
+  fi
+
+  # Add this secret to the VALUES object
+  VALUES=$(echo "$VALUES" | jq --arg k "$SECRET_REF" --arg v "$SECRET_VALUE" '. + {($k): $v}')
+done
+
+# Build the final protocol v1 JSON
+RESULT=$(jq -n --argjson values "$VALUES" '{protocolVersion: 1, values: $values}')
+RES=$?
+if [ ${RES} -ne 0 ]; then
+  echo "JQ Failed"
+  exit ${RES}
+fi
+
+if [ "$ENABLE_LOG" = "full" ]; then
+  echo "qvaultfromopenclaw end success" >> ${LOGLOC}
+fi
+
+# Output the result
+echo "$RESULT"
+exit 0

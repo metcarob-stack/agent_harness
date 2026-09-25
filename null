@@ -1,0 +1,52 @@
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 49: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 49: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 49: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 49: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= accessedbyopenclaw#gateway_token
+   SECRET_PATH= homenet/agents/openclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gateway_token
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 50: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gatewaytoken
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 49: /usr/local/bin/qvault: not found
+qvaultfromopenclaw failed for secret with RES= 127
+   SECRET_FIELD= gatewaytoken
+   SECRET_PATH= homenet/agents/openclaw/accessedbyopenclaw
+   qvault error output: ./qvaultfromopenclaw: 49: /usr/local/bin/qvault: not found
