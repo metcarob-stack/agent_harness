@@ -1,0 +1,40 @@
+name: build_and_deploy
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build_test_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # === prepare stage ===
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Load repo vars
+        run: |
+          source ./_repo_vars.sh
+          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_ENV
+          echo "RJM_VERSION=$RJM_VERSION" >> $GITHUB_ENV
+          echo "RJM_MAJOR_VERSION=$RJM_MAJOR_VERSION" >> $GITHUB_ENV
+
+      # === build stage ===
+      - name: Build main image
+        run: |
+          source ./_repo_vars.sh && \
+          docker build -t ghcr.io/${{ github.repository_owner }}/${PROJECT_NAME}:${RJM_VERSION} .
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image to GitHub Container Registry
+        run: |
+          source ./_repo_vars.sh
+          docker push ghcr.io/${{ github.repository_owner }}/${PROJECT_NAME}:${RJM_VERSION}

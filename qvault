@@ -1,17 +1,18 @@
 #!/bin/sh
 # qvault - wrapper for Vault CLI that loads token from $VAULT_TOKEN_FILE
 
-if [ -z "${VAULT_TOKEN_FILE}" ]; then
-  echo "Error: VAULT_TOKEN_FILE is not set." >&2
-  exit 1
-fi
+# if [ -z "${VAULT_TOKEN_FILE}" ]; then
+#   echo "Error: VAULT_TOKEN_FILE is not set." >&2
+#   exit 1
+# fi
+#
+# if [ ! -f "${VAULT_TOKEN_FILE}" ]; then
+#   echo "Error: VAULT_TOKEN_FILE points to a missing file: ${VAULT_TOKEN_FILE}" >&2
+#   exit 1
+# fi
+#
+# export VAULT_TOKEN="$(cat "${VAULT_TOKEN_FILE}")"
 
-if [ ! -f "${VAULT_TOKEN_FILE}" ]; then
-  echo "Error: VAULT_TOKEN_FILE points to a missing file: ${VAULT_TOKEN_FILE}" >&2
-  exit 1
-fi
-
-export VAULT_TOKEN="$(cat "${VAULT_TOKEN_FILE}")"
+# This container uses docker secrets to get vault tokens
 
 exec vault "$@"
-

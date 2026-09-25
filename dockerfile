@@ -22,8 +22,6 @@ RUN apt-get update && \
     && apt-get install -y --no-install-recommends gh \
     && rm -rf /var/lib/apt/lists/*
 
-ENV VAULT_ADDR=https://vault.metcarob.com
-
 RUN VAULT_VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/vault \
       | grep -o '"current_version":"[0-9.]*"' \
       | cut -d'"' -f4) && \
