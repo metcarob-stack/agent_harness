@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "Migrated to coderelease"
+exit 1
+
 VERSIONFILE="./VERSION"
 
 echo "Bump version then build"
