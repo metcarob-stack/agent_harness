@@ -16,7 +16,7 @@ if [ "$ENABLE_LOG" = "full" ]; then
   echo "qvaultfromopenclaw start JSON_INPUT ${JSON_INPUT}" >> ${LOGLOC}
 fi
 if [ "$ENABLE_LOG" = "none" ]; then
-  LOGLOC=null
+  LOGLOC=/dev/null
 fi
 
 
