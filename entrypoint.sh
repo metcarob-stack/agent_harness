@@ -35,18 +35,8 @@ cp /incommingconfig/SOUL.md /opt/data/SOUL.md
 #     -field=value \
 #     secret/hermes/openai_api_key)
 
-GATEWAY_PASSWORD_LOCATION=homenet/agents/openclaw/accessedbyopenclaw:gatewaytoken
 cp /incommingconfig/config.yaml ${HERMES_CONFIG_FILE}
 
-echo "Fetching gateway password from ${GATEWAY_PASSWORD_LOCATION}"
-RESULTS=$(printf '{"ids":["%s"]}' "$GATEWAY_PASSWORD_LOCATION" | qvaultfromopenclaw)
-RES=$?
-if [ $RES -ne 0 ]; then
-    exit $RES
-fi
-GATEWAY_PASSWORD=$(echo "$RESULTS" | jq -r --arg key "$GATEWAY_PASSWORD_LOCATION" '.values[$key]')
-HASHED_PASSWORD=$(python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('${GATEWAY_PASSWORD}'))")
-sed -i "s|REPLACE_WITH_REAL_GATEWAY_PASSWORD_HASH|${HASHED_PASSWORD}|" ${HERMES_CONFIG_FILE}
 ###cat /root/.hermes/config.yaml
 
 ####################### Load in vault secrets
@@ -84,6 +74,9 @@ while IFS='=' read -r ENV_VAR VAULT_LOCATION; do
 done < "$VAULT_ENV_FILE"
 
 ####################### End of vault in secrets
+
+HASHED_PASSWORD=$(python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('${GATEWAY_PASSWORD}'))")
+sed -i "s|REPLACE_WITH_REAL_GATEWAY_PASSWORD_HASH|${HASHED_PASSWORD}|" ${HERMES_CONFIG_FILE}
 
 ################ Start of skill transfer ##########
 if [ -d "${AGENTHR_SKILL_DIR}" ]; then
